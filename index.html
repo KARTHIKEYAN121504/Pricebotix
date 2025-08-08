@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Pricebotix</title>
+    <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+  </head>
+  <body>
+    <div class="form-container">
+      <h1>🛒 Pricebotix</h1>
+      <h2>Welcome Back</h2>
+      <form id="loginForm">
+        <input type="text" name="username" placeholder="Username" required />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <div id="register"><p>
+          Don't have an account?
+          <a href="register.html" >Register Now</a
+          ></div><a href="forgot-password.html" id="forgot" style="display: none"
+            >Forgot Password?</a
+          >
+        </p>
+        <button type="submit">Login</button><br />
+      </form>
+
+      <p>Or sign in with</p>
+      <button id="googleSignIn" class="google-btn">
+        <img src="glogo.png" alt="Google logo" width="20" height="20" /> Sign in
+        with Google
+      </button>
+      <br />
+      <div id="loginStatus" class="status-text"></div>
+    </div>
+    <footer>
+      <p>&copy; 2025 Pricebotix. All rights reserved.</p>
+      <p>Made with ❤️ by karthikeyan</p>
+    </footer>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+      import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+      } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+      // Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyAtRsD2ol_YLd3V-QliCyQidVwFb-VZztI",
+        authDomain: "pricebotix.firebaseapp.com",
+        projectId: "pricebotix",
+        storageBucket: "pricebotix.firebasestorage.app",
+        messagingSenderId: "642036538456",
+        appId: "1:642036538456:web:6ec975b728f30e0f77be2d",
+        measurementId: "G-BN9D95P7K9",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: "consent",
+        access_type: "offline",
+      });
+
+      // Google Sign-In logic
+      document.getElementById("googleSignIn").addEventListener("click", () => {
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            const user = result.user;
+            const userData = {
+              username: user.displayName,
+              email: user.email,
+              profilePic: user.photoURL,
+              googleId: user.uid,
+            };
+            console.log("✅ Google sign-in successful:", userData);
+            // Send to backend
+            fetch("http://localhost:3500/google-login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(userData),
+            })
+              .then((res) => {
+                if (!res.ok) throw new Error("Failed to save to DB");
+                return res.json();
+              })
+              .then((data) => {
+                console.log("✅ User saved:", data);
+                window.location.href = "main.html";
+              })
+              .catch((err) => {
+                console.error("❌ Error saving to DB:", err);
+                alert("Google sign-in succeeded, but error saving to DB");
+              });
+          })
+          .catch((error) => {
+            console.error("❌ Google sign-in error:", error);
+            alert("Google sign-in failed");
+          });
+      });
+
+      // Normal login form logic
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const status = document.getElementById("loginStatus");
+          status.innerText = "";
+          status.style.color = "red";
+          const forgotLink = document.getElementById("forgot");
+          const registerLink = document.getElementById("register");
+
+          const data = {
+            username: this.username.value.trim(),
+            password: this.password.value,
+          };
+
+          try {
+            const res = await fetch("http://localhost:3500/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+
+            const text = await res.text();
+
+            if (res.ok) {
+              status.style.color = "green";
+              status.innerText = "✅ Login successful! Redirecting...";
+              setTimeout(() => (window.location.href = "main.html"), 1500);
+            } else {
+              status.innerText = "❌ " + text;
+
+              // Custom logic based on backend error message
+              if (text.toLowerCase().includes("username")) {
+                registerLink.style.display = "inline";
+                forgotLink.style.display = "none";
+              } else if (text.toLowerCase().includes("password")) {
+                forgotLink.style.display = "inline";
+                registerLink.style.display = "none";
+              } else {
+                // fallback to show both if error type is unclear
+                registerLink.style.display = "inline";
+              }
+            }
+          } catch (err) {
+            status.innerText = "❌ Error: Could not connect to server.";
+            console.error(err);
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pricebotix</title>
+    <link rel="stylesheet" href="main.css" />
+    <link rel="icon" href="logo.jpg" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <ul>
+        <li><a href="#home">🏠 Home</a></li>
+        <li><a href="#about">ℹ️ About Us</a></li>
+        <li><a href="#why">✨ Why Choose Us</a></li>
+        <li><a onclick="toggleChatbot()">🤖 Chatbot</a></li>
+        <li><a href="#feedback">📝 Feedback</a></li>
+        <li><a href="contact.html">📞 Contact</a></li>
+        <li><a onclick="logout()">👋 Logout</a></li>
+      </ul>
+    </nav>
+
+    <!-- Header -->
+    <header id="home">
+      <h1>🛒 Pricebotix</h1>
+      <div id="userinfo" class="user-info"></div>
+      <div class="tagline">Compare Smart. Save Big. Chat Easy.</div>
+      <div class="bonus-tagline">Compare. Decide. Save</div>
+      <div class="bonus-tagline">Smarter Deals. Powered by AI</div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="content">
+      <!-- Search Section -->
+      <section class="search-container">
+        <form onsubmit="performSearch(event)">
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="🛒 Search for a product  "
+          />
+          <button type="submit">Search</button>
+        </form>
+      </section>
+
+      <!-- Search Results -->
+      <div class="search-results" id="searchResults"></div>
+
+      <!-- Info Boxes -->
+      <section class="info-boxes">
+        <div class="box about" id="about">
+          <h2>ℹ️ About Us</h2>
+          <p>
+            We deliver AI-powered deal comparisons for smarter shopping, faster
+            decisions, and bigger savings.
+          </p>
+        </div>
+
+        <div class="box why-choose" id="why">
+          <h2>✨ Why Choose Us?</h2>
+          <ul>
+            <li>Real-time Price Tracking</li>
+            <li>Secure & Fast</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="tips-section">
+        <h2>💡 Smart Shopping Tips</h2>
+        <ul>
+          <li>Use the chatbot to find the best price instantly.</li>
+          <li>Compare multiple e-commerce stores side-by-side.</li>
+          <li>Get real-time suggestions powered by AI.</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot-toggle" onclick="toggleChatbot()">💬</div>
+
+    <div class="chatbot-container" id="chatbot" style="display: none">
+      <div class="chatbot-header">
+        <h3>Need Any Help?</h3>
+        <span onclick="toggleChatbot()">✖</span>
+      </div>
+      <div class="chatbot-body" id="chatBody">
+        <div class="bot-message">Hi! How can I assist you today?</div>
+      </div>
+      <div class="chatbot-footer">
+        <input type="text" id="chatInput" placeholder="Type your message..." />
+        <button id="sendBtn" onclick="sendMessage()">➤</button>
+      </div>
+    </div>
+
+    <!-- Feedback Form -->
+    <div class="feedback-container" id="feedback">
+      <h1>📝 Feedback & Bug Reports</h1>
+      <span
+        >We value your input! Let us know if you found a bug or have suggestions
+        to improve.</span
+      >
+
+      <br /><br />
+      <form id="feedback-form">
+        <label for="name">Name:</label>
+        <input type="text" name="name" required />
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" required />
+
+        <label for="phone">Phone:</label>
+        <input type="tel" name="phone" />
+
+        <label for="feedback">Your message</label>
+        <textarea name="feedback" rows="4" required></textarea>
+
+        <button type="submit">Submit Feedback</button>
+      </form>
+
+      <div id="form-success" style="display: none">
+        ✅ Thank you! Your feedback has been sent successfully.
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-box">
+          <h3>Pricebotix – Your Smart Shopping Companion</h3>
+<p>
+  Thank you for exploring smarter ways to shop. Compare prices across top stores instantly!
+</p>
+<p>Shop Smart 🛒. Save More, Every Time!</p>
+
+        </div>
+        <div class="footer-box">
+          <div class="quick">
+            <h3>Quick Links</h3>
+            <a href="#home"><i class="fas fa-angle-right"></i> 🏠 Home </a>
+            <a href="#about"><i class="fas fa-angle-right"></i> ℹ️ About Us</a>
+            <a href="#why"><i class="fas fa-angle-right"></i> ✨ Why Choose Us</a>
+            <a onclick="toggleChatbot()"><i class="fas fa-angle-right"></i> 🤖 Chatbot</a>
+            <a href="#feedback">
+              <i class="fas fa-angle-right"></i> 📝 Feedback</a
+            >
+            <a href="contact.html"><i class="fas fa-angle-right"></i> 📞 Contact</a>
+            <a onclick="logout()"><i class="fas fa-angle-right"></i> 👋 Logout</a
+          >
+          </div>
+        </div>
+        <div class="footer-box">
+          <h3>Contact Info</h3>
+          <p><i class="fas fa-phone-alt"></i> +91 97900 37126</p>
+          <p><i class="fas fa-envelope"></i> karthikeyan121504@gmail.com</p>
+          <p><i class="fas fa-map-marker-alt"></i> Chennai, India</p>
+          <div class="social-icons">
+            <a
+              href="https://www.linkedin.com/in/karthikeyan-s-0a279927a/"
+              class="fab fa-linkedin"
+            ></a>
+            <a
+              href="https://github.com/KARTHIKEYAN121504"
+              class="fab fa-github"
+            ></a>
+            <a
+              href="mailto:karthikeyan121504@gmail.com"
+              class="fas fa-envelope"
+            ></a>
+            <a href="https://x.com/SKarthikeyan04" class="fab fa-twitter"></a>
+            <a
+              href="https://m.me/@karthikeyan.220542"
+              class="fa-brands fa-facebook"
+            ></a>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="credit">
+        Designed With <i class="fas fa-heart" style="color: red"></i> By
+        <span style="color: #ffb347">Karthikeyan</span>
+      </div>
+    </footer>
+
+    <!-- Script Section -->
+    <script src="main.js"></script>
+    <script>
+window.onload = function () {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    const userInfo = document.getElementById("userinfo");
+    if (userInfo) {
+      const profilePicHTML = user.profilePic
+        ? `<img src="${user.profilePic}" alt="Profile Picture" class="profile-pic" />`
+        : `<i class="fas fa-user-circle profile-pic" style="font-size: 50px; color: white;"></i>`;
+
+      userInfo.innerHTML = `
+        ${profilePicHTML}
+        <h2>Welcome, <span id="userName">${user.username}</span></h2>
+      `;
+    }
+    }
+  };
+
+      function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+      }
+
+    </script>
+  </body>
+</html>
