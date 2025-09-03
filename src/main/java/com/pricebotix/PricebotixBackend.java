@@ -109,8 +109,7 @@ public class PricebotixBackend {
 
 
 
-    // ✅ Flipkart Scraper
-private static List<Map<String, String>> getFlipkartResults(String query) throws Exception {
+   private static List<Map<String, String>> getFlipkartResults(String query) throws Exception {
     List<Map<String, String>> results = new ArrayList<>();
 
     ChromeOptions options = new ChromeOptions();
@@ -147,24 +146,36 @@ private static List<Map<String, String>> getFlipkartResults(String query) throws
                 try {
                     WebElement anchor = card.findElement(By.cssSelector(
                             "a._1fQZEK, a.IRpwTa, a.s1Q9rs, a.CGtC98, a.wjcEIp, a.rPDeLR"));
-                    link = "https://www.flipkart.com" + anchor.getAttribute("href");
+                    link = anchor.getAttribute("href");
+
+                    // ✅ Normalize Flipkart links
+                    if (link != null) {
+                        if (link.startsWith("//")) {
+                            link = "https:" + link;
+                        } else if (link.startsWith("/")) {
+                            link = "https://www.flipkart.com" + link;
+                        } else if (link.contains("https//")) { // Fix missing colon
+                            link = link.replace("https//", "https://");
+                        }
+                    }
+
+                    // Debug log for link
+                    System.out.println("🔗 Final Flipkart link: " + link);
 
                     // Try text directly in anchor
                     name = anchor.getText().trim();
-
-          
 
                     // Remove common unwanted suffixes
                     name = name.replaceAll(
                             "(?i),?\\s*(Add|to|Bestseller|compare|with|warranty|year|free|offer|exchange|no cost|emi|bank).*",
                             "");
-                             // Clean name: only take first line or remove keywords
-                             String[] lines = name.split("\n");
+
+                    // Clean name: only take first line or remove keywords
+                    String[] lines = name.split("\n");
                     name = lines[0].trim();
-                    if (lines.length > 1){
+                    if (lines.length > 1) {
                         name = lines[1].trim();
                     }
-                  
                     name = name.replaceAll("\\s{2,}", " ").trim();
 
                     // If anchor has no name (jeans, dresses), use title inside div
@@ -217,6 +228,7 @@ private static List<Map<String, String>> getFlipkartResults(String query) throws
 
     return results;
 }
+
 
 
 
